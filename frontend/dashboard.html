@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | Orçamentos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- TOPO -->
+<header class="bg-white shadow p-4 flex justify-between items-center">
+  <h1 class="text-xl font-bold">📊 Orçamentos</h1>
+  <button onclick="logout()"
+    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+    Sair
+  </button>
+</header>
+
+<!-- CONTEÚDO -->
+<main class="p-6">
+
+  <div class="mb-4">
+    <button onclick="carregar()"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      🔄 Atualizar
+    </button>
+  </div>
+
+  <div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-3">Protocolo</th>
+          <th class="p-3">Cliente</th>
+          <th class="p-3">Status</th>
+          <th class="p-3">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+async function carregar() {
+  const token = localStorage.getItem("token")
+
+  if (!token) {
+    alert("Faça login")
+    window.location.href = "index.html"
+    return
+  }
+
+  const res = await fetch("http://127.0.0.1:8000/admin/orcamentos", {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+
+  if (res.status === 401) {
+    alert("Sessão expirada")
+    window.location.href = "index.html"
+    return
+  }
+
+  const data = await res.json()
+  const tabela = document.getElementById("tabela")
+  tabela.innerHTML = ""
+
+  data.forEach(o => {
+    tabela.innerHTML += `
+      <tr class="border-t">
+        <td class="p-3">${o.protocolo}</td>
+        <td class="p-3">${o.cliente}</td>
+        <td class="p-3">
+          <span class="px-2 py-1 rounded text-sm
+            ${o.status === 'aprovado' ? 'bg-green-200 text-green-800' :
+              o.status === 'rejeitado' ? 'bg-red-200 text-red-800' :
+              'bg-yellow-200 text-yellow-800'}">
+            ${o.status}
+          </span>
+        </td>
+        <td class="p-3 space-x-2">
+          <button onclick="aprovar('${o.id}')"
+            class="bg-green-500 text-white px-3 py-1 rounded">
+            Aprovar
+          </button>
+          <button onclick="rejeitar('${o.id}')"
+            class="bg-red-500 text-white px-3 py-1 rounded">
+            Rejeitar
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+async function aprovar(id) {
+  const token = localStorage.getItem("token")
+  await fetch(`http://127.0.0.1:8000/orcamento/${id}/aprovar`, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  carregar()
+}
+
+async function rejeitar(id) {
+  const token = localStorage.getItem("token")
+  await fetch(`http://127.0.0.1:8000/orcamento/${id}/rejeitar`, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  carregar()
+}
+
+function logout() {
+  localStorage.removeItem("token")
+  window.location.href = "index.html"
+}
+
+carregar()
+</script>
+
+</body>
+</html>
