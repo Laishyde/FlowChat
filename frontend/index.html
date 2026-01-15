@@ -1,104 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Meu Refúgio | Login</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>Meu Refúgio</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body>
 
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+  <div class="page">
 
-    <h2 id="titulo" class="text-2xl font-bold text-center mb-6">
-      Entrar
-    </h2>
+    <div class="wrapper">
 
-    <!-- Nome (apenas cadastro) -->
-    <input id="nome"
-      class="hidden w-full mb-3 p-2 border rounded"
-      placeholder="Nome completo" />
+      <div class="border-outer"></div>
 
-    <input id="email"
-      class="w-full mb-3 p-2 border rounded"
-      placeholder="Email" />
+      <div class="container-blue">
 
-    <input id="senha" type="password"
-      class="w-full mb-4 p-2 border rounded"
-      placeholder="Senha" />
+        <div class="login-box">
+<div class="login-content">
+<img src="./assets/logo.png" alt="Meu Refúgio" class="logo">
 
-    <button onclick="acao()"
-      class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
-      Entrar
-    </button>
+            <p class="subtitle">acesse sua conta</p>
 
-    <p id="msg" class="text-center text-red-500 mt-3"></p>
+            <label>usuário</label>
+            <input type="email" placeholder="email@email.com">
 
-    <p class="text-center text-sm mt-6">
-      <span id="toggle-text">Não tem conta?</span>
-      <button onclick="toggle()" class="text-blue-600 font-semibold ml-1">
-        Criar conta
-      </button>
-    </p>
+            <button class="btn-primary">Avançar</button>
+
+         <button class="link" onclick="mostrarEsqueciSenha()">
+  Esqueci minha senha
+</button>
+
+          </div>
+        </div>
+
+        <div class="side-text">
+          <h2>Que bom ter você aqui!</h2>
+          <p>
+            Entre com seus dados para acessar o FlowChat,
+            um espaço pensado para acolher você.
+          </p>
+        </div>
+
+      </div>
+    </div>
 
   </div>
-
 <script>
-let modo = "login"
+  const loginContent = document.querySelector('.login-content');
 
-function toggle() {
-  const nome = document.getElementById("nome")
-  const titulo = document.getElementById("titulo")
-  const botao = document.querySelector("button")
-  const toggleText = document.getElementById("toggle-text")
+  const loginHTML = loginContent.innerHTML;
 
-  if (modo === "login") {
-    modo = "cadastro"
-    nome.classList.remove("hidden")
-    titulo.innerText = "Criar conta"
-    botao.innerText = "Cadastrar"
-    toggleText.innerText = "Já tem conta?"
-  } else {
-    modo = "login"
-    nome.classList.add("hidden")
-    titulo.innerText = "Entrar"
-    botao.innerText = "Entrar"
-    toggleText.innerText = "Não tem conta?"
+  function mostrarEsqueciSenha() {
+    loginContent.innerHTML = `
+      <img src="./assets/logo.png" alt="Meu Refúgio" class="logo">
+
+      <p class="subtitle">recuperar acesso</p>
+
+      <label>email</label>
+      <input type="email" placeholder="email@email.com">
+
+      <button class="btn-primary">Enviar link</button>
+
+      <button class="link" onclick="voltarLogin()">
+        Voltar para login
+      </button>
+    `;
   }
 
-  document.getElementById("msg").innerText = ""
-}
-
-async function acao() {
-  const email = document.getElementById("email").value
-  const senha = document.getElementById("senha").value
-  const nome = document.getElementById("nome").value
-
-  const url = modo === "login"
-    ? "http://127.0.0.1:8000/login"
-    : "http://127.0.0.1:8000/cadastro"
-
-  const body = modo === "login"
-    ? { email, senha }
-    : { nome, email, senha }
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  })
-
-  const data = await res.json()
-
-  if (data.access_token) {
-    localStorage.setItem("token", data.access_token)
-    alert("Login realizado com sucesso")
-    // window.location.href = "/dashboard.html"
-  } else {
-    document.getElementById("msg").innerText =
-      data.msg || data.detail || "Erro"
+  function voltarLogin() {
+    loginContent.innerHTML = loginHTML;
   }
-}
 </script>
 
 </body>
