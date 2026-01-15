@@ -71,9 +71,9 @@ body {
 }
 .login-content .logo {
   display: block;
-  width: 150px;      /* TAMANHO REAL DO LOGO */
+  width: 130px;      /* TAMANHO REAL DO LOGO */
 
-  margin: 0 auto 12px auto;
+  margin: 0 auto  auto;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -95,8 +95,15 @@ input {
   padding: 14px 16px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  margin-bottom: 24px;
+
   font-size: 14px;
+}
+#senha{
+  margin-bottom: 10px;
+}
+.email2{
+    margin-bottom: 10px;
+
 }
 
 input:focus {

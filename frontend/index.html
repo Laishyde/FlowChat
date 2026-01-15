@@ -22,14 +22,21 @@
 
             <p class="subtitle">acesse sua conta</p>
 
-            <label>usuário</label>
-            <input type="email" placeholder="email@email.com">
+           <label>usuário</label>
+<input type="email" id="email" placeholder="email@email.com">
 
-            <button class="btn-primary">Avançar</button>
+<label>senha</label>
+<input type="password" id="senha" placeholder="********">
 
-         <button class="link" onclick="mostrarEsqueciSenha()">
+<button class="btn-primary" onclick="login()">
+  Avançar
+</button>
+
+<button class="link" onclick="mostrarEsqueciSenha()">
   Esqueci minha senha
 </button>
+
+<p id="erro-login" style="color:red; margin-top:12px; text-align: center;"></p>
 
           </div>
         </div>
@@ -58,7 +65,7 @@
       <p class="subtitle">recuperar acesso</p>
 
       <label>email</label>
-      <input type="email" placeholder="email@email.com">
+      <input class="email2" type="email" placeholder="email@email.com">
 
       <button class="btn-primary">Enviar link</button>
 
@@ -72,6 +79,42 @@
     loginContent.innerHTML = loginHTML;
   }
 </script>
+<script>
+  async function login() {
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+    const erro = document.getElementById("erro-login");
+
+    erro.innerText = "";
+
+    if (!email || !senha) {
+      erro.innerText = "Preencha email e senha";
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.access_token);
+
+      window.location.href = "admin.html";
+
+    } catch {
+      erro.innerText = "Email ou senha inválidos";
+    }
+  }
+</script>
+
 
 </body>
 </html>
