@@ -1,65 +1,348 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel Administrativo</title>
-  <link rel="stylesheet" href="admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Orçamentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .active-link { @apply bg-blue-600 text-white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-  <div class="admin">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold flex items-center gap-2">
+                    <i class="fas fa-file-invoice-dollar text-blue-400"></i> Admin
+                </h1>
+            </div>
+            <nav class="flex-1 px-4 space-y-2 py-4">
+                <a href="#" onclick="switchTab('dashboard')" class="nav-btn flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all" id="btn-dashboard">
+                    <i class="fas fa-chart-line w-5"></i> Dashboard
+                </a>
+                <a href="#" onclick="switchTab('usuarios')" class="nav-btn flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all" id="btn-usuarios">
+                    <i class="fas fa-users w-5"></i> Usuários
+                </a>
+                <a href="#" onclick="switchTab('produtos')" class="nav-btn flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all" id="btn-produtos">
+                    <i class="fas fa-box w-5"></i> Produtos
+                </a>
+                <a href="#" onclick="switchTab('clientes')" class="nav-btn flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all" id="btn-clientes">
+                    <i class="fas fa-user-tie w-5"></i> Clientes
+                </a>
+                <a href="#" onclick="switchTab('orcamentos')" class="nav-btn flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all" id="btn-orcamentos">
+                    <i class="fas fa-calculator w-5"></i> Orçamentos
+                </a>
+            </nav>
+            <div class="p-4 border-t border-slate-800">
+                <button class="flex items-center gap-3 p-3 w-full text-red-400 hover:bg-slate-800 rounded-lg transition-all">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </aside>
 
-    <!-- MENU LATERAL -->
-    <aside class="sidebar">
-    <img class="logo" src="./assets/logo.png" alt="">
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            <!-- Header Móvel -->
+            <div class="md:hidden flex items-center justify-between mb-6">
+                <h1 class="text-xl font-bold">Admin Orçamentos</h1>
+                <button onclick="toggleMobileMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
+            </div>
 
-      <nav>
-        <button onclick="showSection('usuarios')">Usuários</button>
-        <button onclick="showSection('produtos')">Produtos</button>
-        <button onclick="showSection('clientes')">Clientes</button>
-        <button onclick="showSection('orcamentos')">Orçamentos</button>
-      </nav>
-    </aside>
+            <!-- Dashboard Content -->
+            <div id="dashboard" class="tab-content active">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold">Dashboard</h2>
+                    <p class="text-gray-500">Bem-vindo ao sistema de gestão.</p>
+                </header>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="p-4 bg-blue-100 text-blue-600 rounded-lg"><i class="fas fa-users text-2xl"></i></div>
+                        <div><p class="text-sm text-gray-500">Usuários</p><p class="text-2xl font-bold">12</p></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="p-4 bg-green-100 text-green-600 rounded-lg"><i class="fas fa-box text-2xl"></i></div>
+                        <div><p class="text-sm text-gray-500">Produtos</p><p class="text-2xl font-bold">148</p></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="p-4 bg-purple-100 text-purple-600 rounded-lg"><i class="fas fa-user-tie text-2xl"></i></div>
+                        <div><p class="text-sm text-gray-500">Clientes</p><p class="text-2xl font-bold">85</p></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <div class="p-4 bg-amber-100 text-amber-600 rounded-lg"><i class="fas fa-calculator text-2xl"></i></div>
+                        <div><p class="text-sm text-gray-500">Orçamentos</p><p class="text-2xl font-bold">324</p></div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- CONTEÚDO -->
-    <main class="content">
+            <!-- Usuários Content -->
+            <div id="usuarios" class="tab-content">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h2 class="text-2xl font-bold">Gestão de Usuários</h2>
+                    <button onclick="openModal('modal-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+                        <i class="fas fa-plus"></i> Cadastrar Usuário
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="p-4 font-semibold text-gray-600">ID</th>
+                                <th class="p-4 font-semibold text-gray-600">Nome</th>
+                                <th class="p-4 font-semibold text-gray-600">E-mail</th>
+                                <th class="p-4 font-semibold text-gray-600">Nível</th>
+                                <th class="p-4 font-semibold text-gray-600 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100" id="table-usuarios">
+                            <!-- Gerado dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-      <!-- USUÁRIOS -->
-      <section id="usuarios" class="section active">
-        <h2>Usuários</h2>
-        <p>Gerencie usuários do sistema.</p>
-      </section>
+            <!-- Produtos Content -->
+            <div id="produtos" class="tab-content">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h2 class="text-2xl font-bold">Catálogo de Produtos</h2>
+                    <button onclick="openModal('modal-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="p-4 font-semibold text-gray-600">SKU</th>
+                                <th class="p-4 font-semibold text-gray-600">Nome</th>
+                                <th class="p-4 font-semibold text-gray-600">Preço</th>
+                                <th class="p-4 font-semibold text-gray-600">Estoque</th>
+                                <th class="p-4 font-semibold text-gray-600 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100" id="table-produtos"></tbody>
+                    </table>
+                </div>
+            </div>
 
-      <!-- PRODUTOS -->
-      <section id="produtos" class="section">
-        <h2>Produtos</h2>
-        <p>Cadastro e edição de produtos.</p>
-      </section>
+            <!-- Clientes Content -->
+            <div id="clientes" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Base de Clientes</h2>
+                    <button onclick="openModal('modal-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Cadastrar Cliente
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="p-4 font-semibold text-gray-600">Nome</th>
+                                <th class="p-4 font-semibold text-gray-600">CPF/CNPJ</th>
+                                <th class="p-4 font-semibold text-gray-600">Telefone</th>
+                                <th class="p-4 font-semibold text-gray-600 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100" id="table-clientes"></tbody>
+                    </table>
+                </div>
+            </div>
 
-      <!-- CLIENTES -->
-      <section id="clientes" class="section">
-        <h2>Clientes</h2>
-        <p>Lista de clientes.</p>
-      </section>
+            <!-- Orçamentos Content -->
+            <div id="orcamentos" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Orçamentos</h2>
+                    <button onclick="openModal('modal-form')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Criar Orçamento
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="p-4 font-semibold text-gray-600">Número</th>
+                                <th class="p-4 font-semibold text-gray-600">Cliente</th>
+                                <th class="p-4 font-semibold text-gray-600">Valor Total</th>
+                                <th class="p-4 font-semibold text-gray-600">Status</th>
+                                <th class="p-4 font-semibold text-gray-600 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100" id="table-orcamentos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 
-      <!-- ORÇAMENTOS -->
-      <section id="orcamentos" class="section">
-        <h2>Orçamentos</h2>
-        <p>Gestão de orçamentos enviados.</p>
-      </section>
+    <!-- Modal Genérico para Cadastro/Edição -->
+    <div id="modal-form" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" id="modal-title">Cadastrar Novo Registro</h3>
+                <button onclick="closeModal('modal-form')" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form class="p-6 space-y-4" onsubmit="event.preventDefault(); alert('Salvo com sucesso!'); closeModal('modal-form');">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nome / Descrição</label>
+                    <input type="text" class="w-full border p-2 rounded-lg outline-blue-500" required placeholder="Digite aqui...">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Campo Adicional 1</label>
+                        <input type="text" class="w-full border p-2 rounded-lg outline-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Campo Adicional 2</label>
+                        <input type="text" class="w-full border p-2 rounded-lg outline-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-form')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    </main>
+    <script>
+        // Dados Mockup
+        const data = {
+            usuarios: [
+                { id: 1, nome: 'Ricardo Silva', email: 'ricardo@empresa.com', nivel: 'Admin' },
+                { id: 2, nome: 'Ana Costa', email: 'ana@vendas.com', nivel: 'Vendedor' }
+            ],
+            produtos: [
+                { sku: 'PRD-001', nome: 'Notebook Pro 15', preco: 'R$ 5.400,00', estoque: 15 },
+                { sku: 'PRD-002', nome: 'Monitor 4K 27"', preco: 'R$ 1.200,00', estoque: 8 }
+            ],
+            clientes: [
+                { nome: 'Tech Solutions Ltda', doc: '00.123.456/0001-99', tel: '(11) 98877-6655' },
+                { nome: 'João da Silva', doc: '123.456.789-00', tel: '(21) 97766-5544' }
+            ],
+            orcamentos: [
+                { num: 'ORC-2023-01', cliente: 'Tech Solutions', total: 'R$ 15.200,00', status: 'Aprovado' },
+                { num: 'ORC-2023-02', cliente: 'João da Silva', total: 'R$ 1.200,00', status: 'Pendente' }
+            ]
+        };
 
-  </div>
+        function switchTab(tabId) {
+            // Esconde todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-link'));
+            
+            // Mostra a selecionada
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if(activeBtn) activeBtn.classList.add('active-link');
+            
+            // Renderiza os dados se houver tabela correspondente
+            renderTables();
+        }
 
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(sec => {
-        sec.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-    }
-  </script>
+        function renderTables() {
+            // Usuarios
+            const userTable = document.getElementById('table-usuarios');
+            if (userTable) {
+                userTable.innerHTML = data.usuarios.map(u => `
+                    <tr>
+                        <td class="p-4 text-gray-500 font-mono text-sm">#${u.id}</td>
+                        <td class="p-4 font-medium">${u.nome}</td>
+                        <td class="p-4 text-gray-600">${u.email}</td>
+                        <td class="p-4"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs uppercase font-bold">${u.nivel}</span></td>
+                        <td class="p-4 text-right flex justify-end gap-2">
+                            <button onclick="editItem('Usuário')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
 
+            // Produtos
+            const prodTable = document.getElementById('table-produtos');
+            if (prodTable) {
+                prodTable.innerHTML = data.produtos.map(p => `
+                    <tr>
+                        <td class="p-4 text-gray-500 text-sm">${p.sku}</td>
+                        <td class="p-4 font-medium">${p.nome}</td>
+                        <td class="p-4 font-semibold text-green-600">${p.preco}</td>
+                        <td class="p-4">${p.estoque} un</td>
+                        <td class="p-4 text-right flex justify-end gap-2">
+                            <button onclick="editItem('Produto')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Clientes
+            const cliTable = document.getElementById('table-clientes');
+            if (cliTable) {
+                cliTable.innerHTML = data.clientes.map(c => `
+                    <tr>
+                        <td class="p-4 font-medium">${c.nome}</td>
+                        <td class="p-4 text-gray-600">${c.doc}</td>
+                        <td class="p-4 text-gray-600">${c.tel}</td>
+                        <td class="p-4 text-right flex justify-end gap-2">
+                            <button onclick="editItem('Cliente')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Orçamentos
+            const orcTable = document.getElementById('table-orcamentos');
+            if (orcTable) {
+                orcTable.innerHTML = data.orcamentos.map(o => `
+                    <tr>
+                        <td class="p-4 font-mono text-sm">${o.num}</td>
+                        <td class="p-4 font-medium">${o.cliente}</td>
+                        <td class="p-4 font-bold text-gray-800">${o.total}</td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded text-xs font-bold uppercase ${o.status === 'Aprovado' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">
+                                ${o.status}
+                            </span>
+                        </td>
+                        <td class="p-4 text-right flex justify-end gap-2">
+                            <button onclick="editItem('Orçamento')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function openModal(id, title = "Novo Registro") {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function editItem(type) {
+            openModal('modal-form', `Editar ${type}`);
+        }
+
+        function deleteItem() {
+            if(confirm("Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.")) {
+                alert("Simulação: Item excluído!");
+            }
+        }
+
+        // Inicializar
+        window.onload = () => {
+            switchTab('dashboard');
+        };
+    </script>
 </body>
 </html>
