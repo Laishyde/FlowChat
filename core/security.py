@@ -1,5 +1,5 @@
 import hashlib
-
+from jose import jwt
 from datetime import datetime, timedelta
 
 SECRET_KEY = "4de36fa327d71601985b5bd20b804d679375139f2856d34c57e9eb40caa36048"
